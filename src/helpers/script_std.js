@@ -846,6 +846,23 @@ export default class ScriptStd {
         return [macd, signal, hist]
     }
 
+    /** Moving Average Convergence/Divergence
+     * @param {TS} src - Input
+     * @param {number} fast - Fast EMA
+     * @param {number} slow - Slow EMA
+     * @param {number} sig - Signal
+     * @return {TS[]} - [cmacd, signal, hist]
+     */
+    cmacd(src, fast, slow, sig, _id) {
+        let id = this._tsid(_id, `cmacd(${fast}${slow}${sig})`)
+        let fast_ma = this.ema(src, fast, id+'1')
+        let slow_ma = this.ema(src, slow, id+'2')
+        let cmacd = this.sub(fast_ma, slow_ma, id+'3')
+        let signal = this.sma(cmacd, sig, id+'4')
+        let hist = this.sub(cmacd, signal, id+'5')
+        return [cmacd, signal, hist]
+    }
+
     /** Max of arguments
      * @param {...number} args - Numeric values
      * @return {number}
